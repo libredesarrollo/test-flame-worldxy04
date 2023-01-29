@@ -4,13 +4,13 @@ import 'package:flame/components.dart';
 enum MovementType {
   walkingright,
   walkingleft,
-  runright,
-  runleft,
   walkingtop,
   walkingbottom,
-  runbottom,
+  runright,
+  runleft,
   runtop,
-  idle,
+  runbottom,
+  idle
 }
 
 class Character extends SpriteAnimationComponent
@@ -18,6 +18,9 @@ class Character extends SpriteAnimationComponent
   int animationIndex = 0;
 
   MovementType movementType = MovementType.idle;
+
+  double speed = 10;
+  bool isMoving = false;
 
   final double spriteSheetWidth = 128, spriteSheetHeight = 128;
 
@@ -28,10 +31,10 @@ class Character extends SpriteAnimationComponent
 
   late SpriteAnimation deadAnimation,
       idleAnimation,
-      jumpAnimation,
-      runAnimation,
-      walkAnimation,
-      walkSlowAnimation;
+      leftAnimation,
+      rightAnimation,
+      topAnimation,
+      bottomAnimation;
 
   late RectangleHitbox body;
 }

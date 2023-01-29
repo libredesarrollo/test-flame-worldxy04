@@ -33,6 +33,14 @@ class PlayerComponent extends Character {
     //     xInit: 0, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
     idleAnimation = spriteSheet.createAnimationByLimit(
         xInit: 3, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
+    bottomAnimation = spriteSheet.createAnimationByLimit(
+        xInit: 0, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
+    leftAnimation = spriteSheet.createAnimationByLimit(
+        xInit: 1, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
+    rightAnimation = spriteSheet.createAnimationByLimit(
+        xInit: 2, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
+    topAnimation = spriteSheet.createAnimationByLimit(
+        xInit: 3, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
     // jumpAnimation = spriteSheet.createAnimationByLimit(
     //     xInit: 3, yInit: 0, step: 12, sizeX: 5, stepTime: .02, loop: false);
     // runAnimation = spriteSheet.createAnimationByLimit(
@@ -54,21 +62,13 @@ class PlayerComponent extends Character {
 
   @override
   void update(double dt) {
+    move(dt);
     super.update(dt);
   }
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
     print(other.toString() + " " + points.first[0].toString());
-    // if (other is ScreenHitbox) {
-    //   if (points.first[0] <= 0.0) {
-    //     // left
-    //     collisionXLeft = true;
-    //   } else if (points.first[0] >= mapSize.x - size.x) {
-    //     // left
-    //     collisionXRight = true;
-    //   }
-    // }
 
     super.onCollision(points, other);
   }
@@ -79,5 +79,106 @@ class PlayerComponent extends Character {
         Vector2(spriteSheetWidth / 4 + 200, 100 - spriteSheetHeight + 200);
     size = Vector2(spriteSheetWidth, spriteSheetHeight);
     movementType = MovementType.idle;
+  }
+
+  void move(double delta) {
+    movePlayer(delta);
+
+    switch (movementType) {
+      case MovementType.walkingright:
+      case MovementType.runright:
+        animation = rightAnimation;
+        break;
+      case MovementType.walkingleft:
+      case MovementType.runleft:
+        animation = leftAnimation;
+        break;
+      case MovementType.walkingtop:
+      case MovementType.runtop:
+        animation = topAnimation;
+        break;
+      case MovementType.walkingbottom:
+      case MovementType.runbottom:
+        animation = bottomAnimation;
+        break;
+      default:
+        animation = idleAnimation;
+        break;
+    }
+  }
+
+  void movePlayer(double delta) {
+    switch (movementType) {
+      case MovementType.walkingright:
+      case MovementType.runright:
+        position.add(Vector2(delta * speed, 0));
+        break;
+      case MovementType.walkingleft:
+      case MovementType.runleft:
+        position.add(Vector2(delta * -speed, 0));
+        break;
+      case MovementType.walkingtop:
+      case MovementType.runtop:
+        position.add(Vector2(0, delta * -speed));
+        break;
+      case MovementType.walkingbottom:
+      case MovementType.runbottom:
+        position.add(Vector2(0, delta * speed));
+        break;
+      default:
+        break;
+    }
+  }
+
+  @override
+  bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    if (keysPressed.isEmpty) {
+      isMoving = false;
+    }
+
+    // RIGHT
+    if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+        keysPressed.contains(LogicalKeyboardKey.keyD)) {
+      if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+        // RUN
+        movementType = MovementType.runright;
+      } else {
+        // WALKING
+        movementType = MovementType.walkingright;
+      }
+    } else
+    // LEFT
+    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+        keysPressed.contains(LogicalKeyboardKey.keyA)) {
+      if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+        // RUN
+        movementType = MovementType.runleft;
+      } else {
+        // WALKING
+        movementType = MovementType.walkingleft;
+      }
+    } else if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
+        keysPressed.contains(LogicalKeyboardKey.keyS)) {
+      if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+        // RUN
+        movementType = MovementType.runbottom;
+      } else {
+        // WALKING
+        movementType = MovementType.walkingbottom;
+      }
+    } else
+    // LEFT
+    if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
+        keysPressed.contains(LogicalKeyboardKey.keyW)) {
+      if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
+        // RUN
+        movementType = MovementType.runtop;
+      } else {
+        // WALKING
+        movementType = MovementType.walkingtop;
+      }
+    }
+
+    return true;
   }
 }
