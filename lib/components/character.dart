@@ -19,7 +19,7 @@ class Character extends SpriteAnimationComponent
 
   MovementType movementType = MovementType.idle;
 
-  double speed = 10;
+  double speed = 40;
   bool isMoving = false;
 
   final double spriteSheetWidth = 128, spriteSheetHeight = 128;

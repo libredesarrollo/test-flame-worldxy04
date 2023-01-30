@@ -7,8 +7,6 @@ import 'package:worldxy04/components/player_component.dart';
 
 class MyGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
-  double elapsedTime = 0.0;
-  int colisionMeteors = 0;
   late PlayerComponent player;
 
   @override
@@ -19,12 +17,6 @@ class MyGame extends FlameGame
     add(ScreenHitbox());
 
     //return super.onLoad();
-  }
-
-  @override
-  void update(double dt) {
-    elapsedTime += dt;
-    super.update(dt);
   }
 
   @override

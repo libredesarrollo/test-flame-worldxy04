@@ -13,11 +13,8 @@ class PlayerComponent extends Character {
   MyGame game;
 
   PlayerComponent({required this.game}) : super() {
-    anchor = Anchor.center;
     debugMode = true;
   }
-
-  int count = 0;
 
   @override
   Future<void>? onLoad() async {
@@ -27,10 +24,6 @@ class PlayerComponent extends Character {
         srcSize: Vector2(spriteSheetWidth, spriteSheetHeight));
 
     // init animation
-    // deadAnimation = spriteSheet.createAnimationByLimit(
-    //     xInit: 0, yInit: 0, step: 8, sizeX: 5, stepTime: .08, loop: false);
-    // idleAnimation = spriteSheet.createAnimationByLimit(
-    //     xInit: 0, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
     idleAnimation = spriteSheet.createAnimationByLimit(
         xInit: 3, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
     bottomAnimation = spriteSheet.createAnimationByLimit(
@@ -41,22 +34,12 @@ class PlayerComponent extends Character {
         xInit: 2, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
     topAnimation = spriteSheet.createAnimationByLimit(
         xInit: 3, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
-    // jumpAnimation = spriteSheet.createAnimationByLimit(
-    //     xInit: 3, yInit: 0, step: 12, sizeX: 5, stepTime: .02, loop: false);
-    // runAnimation = spriteSheet.createAnimationByLimit(
-    //     xInit: 5, yInit: 0, step: 8, sizeX: 5, stepTime: .08);
-    // walkAnimation = spriteSheet.createAnimationByLimit(
-    //     xInit: 6, yInit: 2, step: 10, sizeX: 5, stepTime: .08);
-    // walkSlowAnimation = spriteSheet.createAnimationByLimit(
-    //     xInit: 6, yInit: 2, step: 10, sizeX: 5, stepTime: .32);
     // end animation
 
     reset();
 
     body = RectangleHitbox()..collisionType = CollisionType.active;
-
     add(body);
-
     return super.onLoad();
   }
 
@@ -108,6 +91,10 @@ class PlayerComponent extends Character {
   }
 
   void movePlayer(double delta) {
+    if (!isMoving) {
+      return;
+    }
+
     switch (movementType) {
       case MovementType.walkingright:
       case MovementType.runright:
@@ -134,6 +121,8 @@ class PlayerComponent extends Character {
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (keysPressed.isEmpty) {
       isMoving = false;
+    } else {
+      isMoving = true;
     }
 
     // RIGHT
