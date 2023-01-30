@@ -44,12 +44,6 @@ class PlayerComponent extends Character {
   }
 
   @override
-  void update(double dt) {
-    move(dt);
-    super.update(dt);
-  }
-
-  @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
     print(other.toString() + " " + points.first[0].toString());
 
@@ -62,6 +56,12 @@ class PlayerComponent extends Character {
         Vector2(spriteSheetWidth / 4 + 200, 100 - spriteSheetHeight + 200);
     size = Vector2(spriteSheetWidth, spriteSheetHeight);
     movementType = MovementType.idle;
+  }
+
+  @override
+  void update(double dt) {
+    move(dt);
+    super.update(dt);
   }
 
   void move(double delta) {
