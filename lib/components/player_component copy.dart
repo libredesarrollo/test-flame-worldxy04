@@ -71,43 +71,22 @@ class PlayerComponent extends Character {
       case MovementType.walkingright:
       case MovementType.runright:
         animation = rightAnimation;
-        _resetAnimation();
-
         break;
       case MovementType.walkingleft:
       case MovementType.runleft:
         animation = leftAnimation;
-        _resetAnimation();
-
         break;
       case MovementType.walkingtop:
       case MovementType.runtop:
         animation = topAnimation;
-        _resetAnimation();
-
         break;
       case MovementType.walkingbottom:
       case MovementType.runbottom:
         animation = bottomAnimation;
-        _resetAnimation();
-
-        break;
-
-      case MovementType.idle:
-        print('idle');
-
-        animation?.loop = false;
-        // animation?.loop = false;
         break;
       default:
+        animation = idleAnimation;
         break;
-    }
-  }
-
-  void _resetAnimation() {
-    if (!animation!.loop) {
-      animation?.loop = true;
-      animation?.reset();
     }
   }
 
