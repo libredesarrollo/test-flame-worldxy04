@@ -7,6 +7,7 @@ import 'package:flame/components.dart';
 
 import 'package:worldxy04/components/character.dart';
 import 'package:worldxy04/utils/create_animation_by_limit.dart';
+
 import 'package:worldxy04/main.dart';
 
 class PlayerComponent extends Character {
@@ -26,13 +27,13 @@ class PlayerComponent extends Character {
     // init animation
     idleAnimation = spriteSheet.createAnimationByLimit(
         xInit: 3, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
-    bottomAnimation = spriteSheet.createAnimationByLimit(
+    downAnimation = spriteSheet.createAnimationByLimit(
         xInit: 0, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
     leftAnimation = spriteSheet.createAnimationByLimit(
         xInit: 1, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
     rightAnimation = spriteSheet.createAnimationByLimit(
         xInit: 2, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
-    topAnimation = spriteSheet.createAnimationByLimit(
+    upAnimation = spriteSheet.createAnimationByLimit(
         xInit: 3, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
     // end animation
 
@@ -80,15 +81,15 @@ class PlayerComponent extends Character {
         _resetAnimation();
 
         break;
-      case MovementType.walkingtop:
-      case MovementType.runtop:
-        animation = topAnimation;
+      case MovementType.walkingup:
+      case MovementType.runup:
+        animation = upAnimation;
         _resetAnimation();
 
         break;
-      case MovementType.walkingbottom:
-      case MovementType.runbottom:
-        animation = bottomAnimation;
+      case MovementType.walkingdown:
+      case MovementType.rundown:
+        animation = downAnimation;
         _resetAnimation();
 
         break;
@@ -125,12 +126,12 @@ class PlayerComponent extends Character {
       case MovementType.runleft:
         position.add(Vector2(delta * -speed, 0));
         break;
-      case MovementType.walkingtop:
-      case MovementType.runtop:
+      case MovementType.walkingup:
+      case MovementType.runup:
         position.add(Vector2(0, delta * -speed));
         break;
-      case MovementType.walkingbottom:
-      case MovementType.runbottom:
+      case MovementType.walkingdown:
+      case MovementType.rundown:
         position.add(Vector2(0, delta * speed));
         break;
       default:
@@ -172,10 +173,10 @@ class PlayerComponent extends Character {
         keysPressed.contains(LogicalKeyboardKey.keyS)) {
       if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
         // RUN
-        movementType = MovementType.runbottom;
+        movementType = MovementType.rundown;
       } else {
         // WALKING
-        movementType = MovementType.walkingbottom;
+        movementType = MovementType.walkingdown;
       }
     } else
     // LEFT
@@ -183,10 +184,10 @@ class PlayerComponent extends Character {
         keysPressed.contains(LogicalKeyboardKey.keyW)) {
       if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
         // RUN
-        movementType = MovementType.runtop;
+        movementType = MovementType.runup;
       } else {
         // WALKING
-        movementType = MovementType.walkingtop;
+        movementType = MovementType.walkingup;
       }
     }
 
