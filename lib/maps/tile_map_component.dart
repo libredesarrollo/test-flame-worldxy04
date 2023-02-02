@@ -4,11 +4,11 @@ import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 
 import 'package:tiled/tiled.dart';
-import 'package:worldxy04/maps/tile/water.dart';
+import 'package:worldxy04/maps/tile/object_component.dart';
+import 'package:worldxy04/maps/tile/water_component.dart';
 
 class TileMapComponent extends PositionComponent {
   late TiledComponent tiledMap;
-  //List<Life> lifes = [];
 
   @override
   Future<void>? onLoad() async {
@@ -18,14 +18,14 @@ class TileMapComponent extends PositionComponent {
     final objWater = tiledMap.tileMap.getLayer<ObjectGroup>("water_object");
 
     for (final obj in objWater!.objects) {
-      add(Water(
+      add(WaterComponent(
           size: Vector2(obj.width, obj.height),
           position: Vector2(obj.x, obj.y)));
     }
     final objObs = tiledMap.tileMap.getLayer<ObjectGroup>("obstacles_object");
 
     for (final obj in objObs!.objects) {
-      add(Water(
+      add(ObjectComponent(
           size: Vector2(obj.width, obj.height),
           position: Vector2(obj.x, obj.y)));
     }

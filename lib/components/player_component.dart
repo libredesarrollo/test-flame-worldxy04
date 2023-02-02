@@ -6,6 +6,8 @@ import 'package:flame/flame.dart';
 import 'package:flame/components.dart';
 
 import 'package:worldxy04/components/character.dart';
+import 'package:worldxy04/maps/tile/object_component.dart';
+import 'package:worldxy04/maps/tile/water_component.dart';
 import 'package:worldxy04/utils/create_animation_by_limit.dart';
 
 import 'package:worldxy04/main.dart';
@@ -46,15 +48,25 @@ class PlayerComponent extends Character {
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-    print(other.toString() + " " + points.first[0].toString());
+    //print(other.toString() + " " + points.first[0].toString());
+
+    if (other is WaterComponent || other is ObjectComponent) {
+      objectCollition = true;
+      playerCollisionDirection = playerDirection;
+    }
 
     super.onCollision(points, other);
   }
 
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    playerCollisionDirection = null;
+    super.onCollisionEnd(other);
+  }
+
   void reset({bool dead = false}) {
     animation = idleAnimation;
-    position =
-        Vector2(spriteSheetWidth / 4 + 200, 100 - spriteSheetHeight + 200);
+    position = Vector2(0, 0);
     size = Vector2(spriteSheetWidth, spriteSheetHeight);
     movementType = MovementType.idle;
   }
@@ -113,9 +125,11 @@ class PlayerComponent extends Character {
   }
 
   void movePlayer(double delta) {
-    // if (!isMoving) {
-    //   return;
-    // }
+    if (objectCollition && playerDirection == playerCollisionDirection) {
+      return;
+    }
+
+    print('moverrrr ${objectCollition} ${playerCollisionDirection}');
 
     switch (movementType) {
       case MovementType.walkingright:
@@ -151,6 +165,7 @@ class PlayerComponent extends Character {
     // RIGHT
     if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
         keysPressed.contains(LogicalKeyboardKey.keyD)) {
+      playerDirection = PlayerDirection.right;
       if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
         // RUN
         movementType = MovementType.runright;
@@ -162,6 +177,7 @@ class PlayerComponent extends Character {
     // LEFT
     if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
         keysPressed.contains(LogicalKeyboardKey.keyA)) {
+      playerDirection = PlayerDirection.left;
       if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
         // RUN
         movementType = MovementType.runleft;
@@ -171,6 +187,7 @@ class PlayerComponent extends Character {
       }
     } else if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
         keysPressed.contains(LogicalKeyboardKey.keyS)) {
+      playerDirection = PlayerDirection.down;
       if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
         // RUN
         movementType = MovementType.rundown;
@@ -182,6 +199,7 @@ class PlayerComponent extends Character {
     // LEFT
     if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
         keysPressed.contains(LogicalKeyboardKey.keyW)) {
+      playerDirection = PlayerDirection.up;
       if (keysPressed.contains(LogicalKeyboardKey.shiftLeft)) {
         // RUN
         movementType = MovementType.runup;
