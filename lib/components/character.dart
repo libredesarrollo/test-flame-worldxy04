@@ -22,7 +22,7 @@ class Character extends SpriteAnimationComponent
   PlayerDirection playerDirection = PlayerDirection.down;
   PlayerDirection? playerCollisionDirection = PlayerDirection.down;
 
-  double speed = 40;
+  double speed = 120;
   bool objectCollition = false;
 
   final double spriteSheetWidth = 128, spriteSheetHeight = 128;

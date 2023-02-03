@@ -15,8 +15,15 @@ class MyGame extends FlameGame
     var background = TileMapComponent();
     add(background);
 
-    player = PlayerComponent(game: this);
-    add(player);
+    background.loaded.then(
+      (value) {
+        player = PlayerComponent(game: this);
+        add(player);
+        camera.followComponent(player,
+            worldBounds: Rect.fromLTRB(
+                0, 0, background.tiledMap.size.x, background.tiledMap.size.y));
+      },
+    );
 
     add(ScreenHitbox());
 
