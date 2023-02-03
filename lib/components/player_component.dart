@@ -60,7 +60,12 @@ class PlayerComponent extends Character {
 
   @override
   void onCollisionEnd(PositionComponent other) {
-    playerCollisionDirection = null;
+
+    if (other is WaterComponent || other is ObjectComponent) {
+      objectCollition = false;
+      playerCollisionDirection = null;
+    }
+
     super.onCollisionEnd(other);
   }
 
