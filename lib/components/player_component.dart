@@ -51,8 +51,10 @@ class PlayerComponent extends Character {
     //print(other.toString() + " " + points.first[0].toString());
 
     if (other is WaterComponent || other is ObjectComponent) {
-      objectCollition = true;
-      playerCollisionDirection = playerDirection;
+      //playerCollisionDirection = playerDirection;
+      if (!playerCollisionDirection.contains(playerDirection)) {
+        playerCollisionDirection.add(playerDirection);
+      }
     }
 
     super.onCollision(points, other);
@@ -60,10 +62,8 @@ class PlayerComponent extends Character {
 
   @override
   void onCollisionEnd(PositionComponent other) {
-
     if (other is WaterComponent || other is ObjectComponent) {
-      objectCollition = false;
-      playerCollisionDirection = null;
+      playerCollisionDirection = [];
     }
 
     super.onCollisionEnd(other);
@@ -130,28 +130,60 @@ class PlayerComponent extends Character {
   }
 
   void movePlayer(double delta) {
-    if (objectCollition && playerDirection == playerCollisionDirection) {
-      return;
-    }
+    // if (playerDirection == playerCollisionDirection) {
+    // if (playerCollisionDirection.contains(playerDirection)) {
+    //   return;
+    // }
 
-    print('moverrrr ${objectCollition} ${playerCollisionDirection}');
+    print('moverrrr ${playerCollisionDirection.toString()}   ${movementType}');
 
     switch (movementType) {
       case MovementType.walkingright:
       case MovementType.runright:
-        position.add(Vector2(delta * speed, 0));
+        if (playerCollisionDirection.isNotEmpty &&
+            playerCollisionDirection[0] == PlayerDirection.right) {
+          // if (playerCollisionDirection.isNotEmpty) {
+          // if (playerCollisionDirection[0] != PlayerDirection.right) {
+          //   position.add(Vector2(delta * speed, 0));
+          // }
+        } else {
+          position.add(Vector2(delta * speed, 0));
+        }
+
         break;
       case MovementType.walkingleft:
       case MovementType.runleft:
-        position.add(Vector2(delta * -speed, 0));
+        if (playerCollisionDirection.isNotEmpty &&
+            playerCollisionDirection[0] == PlayerDirection.left) {
+          // if (playerCollisionDirection[0] != PlayerDirection.left) {
+          //   position.add(Vector2(delta * -speed, 0));
+          // }
+        } else {
+          position.add(Vector2(delta * -speed, 0));
+        }
+
         break;
       case MovementType.walkingup:
       case MovementType.runup:
-        position.add(Vector2(0, delta * -speed));
+        if (playerCollisionDirection.isNotEmpty &&
+            playerCollisionDirection[0] == PlayerDirection.up) {
+          // if (playerCollisionDirection[0] != PlayerDirection.up) {
+          //   position.add(Vector2(0, delta * -speed));
+          // }
+        } else {
+          position.add(Vector2(0, delta * -speed));
+        }
         break;
       case MovementType.walkingdown:
       case MovementType.rundown:
-        position.add(Vector2(0, delta * speed));
+        if (playerCollisionDirection.isNotEmpty &&
+            playerCollisionDirection[0] == PlayerDirection.down) {
+          // if (playerCollisionDirection[0] != PlayerDirection.down) {
+          //   position.add(Vector2(0, delta * speed));
+          // }
+        } else {
+          position.add(Vector2(0, delta * speed));
+        }
         break;
       default:
         break;

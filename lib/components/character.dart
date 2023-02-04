@@ -20,10 +20,10 @@ class Character extends SpriteAnimationComponent
   MovementType movementType = MovementType.idle;
 
   PlayerDirection playerDirection = PlayerDirection.down;
-  PlayerDirection? playerCollisionDirection = PlayerDirection.down;
+  List<PlayerDirection> playerCollisionDirection = [];
 
   double speed = 120;
-  bool objectCollition = false;
+  //bool objectCollition = false;
 
   final double spriteSheetWidth = 128, spriteSheetHeight = 128;
 
