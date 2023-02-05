@@ -51,10 +51,9 @@ class PlayerComponent extends Character {
     //print(other.toString() + " " + points.first[0].toString());
 
     if (other is WaterComponent || other is ObjectComponent) {
-      if (!objectCollition) {
-        playerCollisionDirection = playerDirection;
-        objectCollition = true;
-        print('collision with obstacle in direction: ${playerDirection}');
+      //playerCollisionDirection = playerDirection;
+      if (!playerCollisionDirection.contains(playerDirection)) {
+        playerCollisionDirection.add(playerDirection);
       }
     }
 
@@ -64,8 +63,7 @@ class PlayerComponent extends Character {
   @override
   void onCollisionEnd(PositionComponent other) {
     if (other is WaterComponent || other is ObjectComponent) {
-      playerCollisionDirection = null;
-      objectCollition = false;
+      playerCollisionDirection = [];
     }
 
     super.onCollisionEnd(other);
@@ -114,7 +112,7 @@ class PlayerComponent extends Character {
         break;
 
       case MovementType.idle:
-        //print('idle');
+        print('idle');
 
         animation?.loop = false;
         // animation?.loop = false;
@@ -141,7 +139,11 @@ class PlayerComponent extends Character {
     //   return;
     // }
 
-    if (!(objectCollition && playerCollisionDirection == playerDirection)) {
+    if (!(playerCollisionDirection.isNotEmpty &&
+        playerCollisionDirection[0] == playerDirection)) {
+      print('nop moviendo***');
+    } else {
+      print('moviendo***');
       switch (movementType) {
         case MovementType.walkingright:
         case MovementType.runright:
