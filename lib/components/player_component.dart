@@ -14,9 +14,14 @@ import 'package:worldxy04/main.dart';
 
 class PlayerComponent extends Character {
   MyGame game;
+  Vector2 mapSize;
+  Vector2 posPlayer;
 
-  PlayerComponent({required this.game}) : super() {
+  PlayerComponent(
+      {required this.mapSize, required this.game, required this.posPlayer})
+      : super() {
     debugMode = true;
+    position = posPlayer;
   }
 
   @override
@@ -41,7 +46,10 @@ class PlayerComponent extends Character {
 
     reset();
 
-    body = RectangleHitbox()..collisionType = CollisionType.active;
+    body = RectangleHitbox(
+        size: Vector2(spriteSheetWidth - 60, spriteSheetHeight - 40),
+        position: Vector2(30, 20))
+      ..collisionType = CollisionType.active;
     add(body);
     return super.onLoad();
   }
@@ -73,7 +81,6 @@ class PlayerComponent extends Character {
 
   void reset({bool dead = false}) {
     animation = idleAnimation;
-    position = Vector2(0, 0);
     size = Vector2(spriteSheetWidth, spriteSheetHeight);
     movementType = MovementType.idle;
   }
@@ -155,7 +162,9 @@ class PlayerComponent extends Character {
           //   position.add(Vector2(delta * speed, 0));
           // }
 
-          position.add(Vector2(delta * speed, 0));
+          if (position.x < mapSize.x - size.x) {
+            position.add(Vector2(delta * speed, 0));
+          }
 
           break;
         case MovementType.walkingleft:
@@ -168,9 +177,9 @@ class PlayerComponent extends Character {
           // } else {
           //   position.add(Vector2(delta * -speed, 0));
           // }
-
-          position.add(Vector2(delta * -speed, 0));
-
+          if (position.x > 0) {
+            position.add(Vector2(delta * -speed, 0));
+          }
           break;
         case MovementType.walkingup:
         case MovementType.runup:
@@ -182,8 +191,9 @@ class PlayerComponent extends Character {
           // } else {
           //   position.add(Vector2(0, delta * -speed));
           // }
-
-          position.add(Vector2(0, delta * -speed));
+          if (position.y > 0) {
+            position.add(Vector2(0, delta * -speed));
+          }
           break;
         case MovementType.walkingdown:
         case MovementType.rundown:
@@ -195,8 +205,9 @@ class PlayerComponent extends Character {
           // } else {
           //   position.add(Vector2(0, delta * speed));
           // }
-
-          position.add(Vector2(0, delta * speed));
+          if (position.y < mapSize.y - size.y) {
+            position.add(Vector2(0, delta * speed));
+          }
           break;
         default:
           break;

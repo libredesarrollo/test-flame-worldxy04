@@ -9,6 +9,7 @@ import 'package:worldxy04/maps/tile/water_component.dart';
 
 class TileMapComponent extends PositionComponent {
   late TiledComponent tiledMap;
+  late Vector2 posPlayer;
 
   @override
   Future<void>? onLoad() async {
@@ -29,6 +30,9 @@ class TileMapComponent extends PositionComponent {
           size: Vector2(obj.width, obj.height),
           position: Vector2(obj.x, obj.y)));
     }
+
+    final objPlayer = tiledMap.tileMap.getLayer<ObjectGroup>("player_object");
+    posPlayer = Vector2(objPlayer!.objects[0].x, objPlayer.objects[0].y);
 
     return super.onLoad();
   }

@@ -17,7 +17,10 @@ class MyGame extends FlameGame
 
     background.loaded.then(
       (value) {
-        player = PlayerComponent(game: this);
+        player = PlayerComponent(
+            mapSize: background.tiledMap.size,
+            game: this,
+            posPlayer: background.posPlayer);
         add(player);
         camera.followComponent(player,
             worldBounds: Rect.fromLTRB(
