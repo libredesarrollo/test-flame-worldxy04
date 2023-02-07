@@ -4,6 +4,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:worldxy04/components/player_component.dart';
+import 'package:worldxy04/components/zombie_component.dart';
 import 'package:worldxy04/maps/tile_map_component.dart';
 
 class MyGame extends FlameGame
@@ -27,6 +28,8 @@ class MyGame extends FlameGame
                 0, 0, background.tiledMap.size.x, background.tiledMap.size.y));
       },
     );
+
+    add(ZombieComponent());
 
     add(ScreenHitbox());
 
