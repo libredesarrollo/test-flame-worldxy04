@@ -29,7 +29,7 @@ class MyGame extends FlameGame
       },
     );
 
-    add(ZombieComponent());
+//    add(ZombieComponent());
 
     add(ScreenHitbox());
 

@@ -51,18 +51,27 @@ class PlayerComponent extends Character {
         position: Vector2(30, 20))
       ..collisionType = CollisionType.active;
     add(body);
+
     return super.onLoad();
   }
 
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
-    //print(other.toString() + " " + points.first[0].toString());
-
     if (other is WaterComponent || other is ObjectComponent) {
-      if (!objectCollition) {
+      if (objectCollitionId == -1) {
+        // objectCollition = true;
+        // primera colision
         playerCollisionDirection = playerDirection;
-        objectCollition = true;
-        print('collision with obstacle in direction: ${playerDirection}');
+        objectCollitionId = other.position.x;
+        print(
+            'primera colision: ${playerCollisionDirection} ${playerCollisionDirectionTwo} ${playerCollisionDirectionTwo} ${objectCollitionId} ${objectCollitionTwoId}');
+      } else if (objectCollitionTwoId == -1 &&
+          objectCollitionId != other.position.x) {
+        // segunda colision
+        objectCollitionTwoId = other.position.x;
+        playerCollisionDirectionTwo = playerDirection;
+        print(
+            'segunda colision: ${playerCollisionDirection} ${playerCollisionDirectionTwo} ${playerCollisionDirectionTwo} ${objectCollitionId} ${objectCollitionTwoId}');
       }
     }
 
@@ -72,12 +81,70 @@ class PlayerComponent extends Character {
   @override
   void onCollisionEnd(PositionComponent other) {
     if (other is WaterComponent || other is ObjectComponent) {
-      playerCollisionDirection = null;
-      objectCollition = false;
+      if (objectCollitionId == other.position.x) {
+        // se fue la primera colision
+        playerCollisionDirection =
+            playerCollisionDirectionTwo; // la colision dos es la uno ahora
+        objectCollitionId = objectCollitionTwoId;
+        // limpiamos la segunda colision
+        objectCollitionTwoId = -1;
+        playerCollisionDirectionTwo = null;
+        print(
+            '***se fue la primera colision: ${playerCollisionDirection} ${playerCollisionDirectionTwo} ${playerCollisionDirectionTwo} ${objectCollitionId} ${objectCollitionTwoId}');
+      } else if (objectCollitionTwoId == other.position.x) {
+        // se fue la segunda colision
+        playerCollisionDirectionTwo = null;
+        objectCollitionTwoId = -1;
+        print(
+            '***se fue la segunda colision: ${playerCollisionDirection} ${playerCollisionDirectionTwo} ${playerCollisionDirectionTwo} ${objectCollitionId} ${objectCollitionTwoId}');
+      }
     }
 
     super.onCollisionEnd(other);
   }
+
+  // else {
+  //   if (objectCollitionId != -1) {
+  //   } else {
+  //     // solo hay una colision, restablecemos todo
+  //     playerCollisionDirectionTwo = null;
+  //     playerCollisionDirection = null;
+  //     objectCollition = false;
+  //     print(
+  //         '***solo hay una colision, restablecemos todo: ${playerCollisionDirection} ${playerCollisionDirectionTwo} ${playerCollisionDirectionTwo} ${objectCollitionId} ${objectCollitionTwoId}');
+  //   }
+  // }
+
+  // @override
+  // void onCollisionEnd(PositionComponent other) {
+  //   if (other is WaterComponent || other is ObjectComponent) {
+  //     if (objectCollitionId == other.position.x) {
+  //       // se fue la segunda colision
+  //       playerCollisionDirectionTwo = null;
+  //       objectCollitionId = -1;
+  //       print(
+  //           '***se fue la segunda colision: ${playerCollisionDirection} ${playerCollisionDirectionTwo} ${playerCollisionDirectionTwo} ${objectCollitionId} ${objectCollitionTwoId}');
+  //     }
+  //     else {
+  //       if (objectCollitionId != -1) {
+  //         // se fue la primera colision
+  //         playerCollisionDirectionTwo = playerCollisionDirection;
+  //         objectCollitionId = -1;
+  //         print(
+  //             '***se fue la primera colision: ${playerCollisionDirection} ${playerCollisionDirectionTwo} ${playerCollisionDirectionTwo} ${objectCollitionId} ${objectCollitionTwoId}');
+  //       } else {
+  //         // solo hay una colision, restablecemos todo
+  //         playerCollisionDirectionTwo = null;
+  //         playerCollisionDirection = null;
+  //         objectCollition = false;
+  //         print(
+  //             '***solo hay una colision, restablecemos todo: ${playerCollisionDirection} ${playerCollisionDirectionTwo} ${playerCollisionDirectionTwo} ${objectCollitionId} ${objectCollitionTwoId}');
+  //       }
+  //     }
+  //   }
+
+  //   super.onCollisionEnd(other);
+  // }
 
   void reset({bool dead = false}) {
     animation = idleAnimation;
@@ -148,7 +215,8 @@ class PlayerComponent extends Character {
     //   return;
     // }
 
-    if (!(objectCollition && playerCollisionDirection == playerDirection)) {
+    if (!(playerCollisionDirection == playerDirection ||
+        playerCollisionDirectionTwo == playerDirection)) {
       switch (movementType) {
         case MovementType.walkingright:
         case MovementType.runright:
