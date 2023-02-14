@@ -4,16 +4,26 @@ import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:worldxy04/components/character.dart';
 import 'package:worldxy04/components/enemy_character.dart';
+import 'package:worldxy04/maps/tile/object_component.dart';
+import 'package:worldxy04/maps/tile/water_component.dart';
 
 import 'package:worldxy04/utils/create_animation_by_limit.dart';
 
 import 'dart:math';
 
 class ZombieComponent extends EnemyCharacter {
+  Vector2 mapSize;
   double elapsedTime = 0;
+
+  ZombieComponent({required this.mapSize}) : super() {
+    debugMode = true;
+  }
+
   @override
   Future<void>? onLoad() async {
-    final spriteImage = await Flame.images.load('player.png');
+    spriteSheetWidth = 32;
+    spriteSheetHeight = 64;
+    final spriteImage = await Flame.images.load('zombie.png');
 
     final spriteSheet = SpriteSheet(
         image: spriteImage,
@@ -21,23 +31,22 @@ class ZombieComponent extends EnemyCharacter {
 
     // init animation
     idleAnimation = spriteSheet.createAnimationByLimit(
-        xInit: 3, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
+        xInit: 0, yInit: 0, step: 3, sizeX: 3, stepTime: .2);
     downAnimation = spriteSheet.createAnimationByLimit(
-        xInit: 0, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
+        xInit: 0, yInit: 0, step: 3, sizeX: 3, stepTime: .2);
     leftAnimation = spriteSheet.createAnimationByLimit(
-        xInit: 1, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
+        xInit: 1, yInit: 0, step: 3, sizeX: 3, stepTime: .2);
     rightAnimation = spriteSheet.createAnimationByLimit(
-        xInit: 2, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
+        xInit: 2, yInit: 0, step: 3, sizeX: 3, stepTime: .2);
     upAnimation = spriteSheet.createAnimationByLimit(
-        xInit: 3, yInit: 0, step: 4, sizeX: 8, stepTime: .2);
+        xInit: 3, yInit: 0, step: 3, sizeX: 3, stepTime: .2);
     // end animation
 
     reset();
 
     body = RectangleHitbox(
-        size: Vector2(spriteSheetWidth - 60, spriteSheetHeight - 40),
-        position: Vector2(30, 20))
-      ..collisionType = CollisionType.active;
+      size: Vector2(spriteSheetWidth, spriteSheetHeight - 40),
+    )..collisionType = CollisionType.active;
     add(body);
     return super.onLoad();
   }
@@ -45,6 +54,7 @@ class ZombieComponent extends EnemyCharacter {
   void reset({bool dead = false}) {
     animation = idleAnimation;
     size = Vector2(spriteSheetWidth, spriteSheetHeight);
+    position = Vector2(300, 300);
     movementType = MovementType.idle;
   }
 
@@ -57,21 +67,52 @@ class ZombieComponent extends EnemyCharacter {
       elapsedTime = 0.0;
     }
 
-    switch (playerDirection) {
-      case PlayerDirection.down:
-        position.y += speed * dt;
-        break;
-      case PlayerDirection.left:
-        position.x -= speed * dt;
-        break;
-      case PlayerDirection.up:
-        position.y -= speed * dt;
-        break;
-      case PlayerDirection.right:
-        position.x += speed * dt;
-        break;
+    if (playerCollisionDirection != playerDirection) {
+      switch (playerDirection) {
+        case PlayerDirection.down:
+          if (position.y < mapSize.y - size.y) {
+            position.y += speed * dt;
+          }
+          break;
+        case PlayerDirection.left:
+          if (position.x > 0) {
+            position.x -= speed * dt;
+          }
+          break;
+        case PlayerDirection.up:
+          if (position.y > 0) {
+            position.y -= speed * dt;
+          }
+          break;
+        case PlayerDirection.right:
+          if (position.x < mapSize.x - size.x) {
+            position.x += speed * dt;
+          }
+          break;
+      }
     }
 
     super.update(dt);
+  }
+
+  @override
+  void onCollision(Set<Vector2> points, PositionComponent other) {
+    if (other is WaterComponent || other is ObjectComponent) {
+      if (playerCollisionDirection == null) {
+        // ??=
+        playerCollisionDirection = playerDirection;
+      }
+    }
+
+    super.onCollision(points, other);
+  }
+
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    if (other is WaterComponent || other is ObjectComponent) {
+      playerCollisionDirection = null;
+    }
+
+    super.onCollisionEnd(other);
   }
 }

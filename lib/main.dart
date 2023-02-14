@@ -26,10 +26,9 @@ class MyGame extends FlameGame
         camera.followComponent(player,
             worldBounds: Rect.fromLTRB(
                 0, 0, background.tiledMap.size.x, background.tiledMap.size.y));
+        add(ZombieComponent(mapSize: background.tiledMap.size));
       },
     );
-
-//    add(ZombieComponent());
 
     add(ScreenHitbox());
 

@@ -64,6 +64,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/player.png
+    - assets/images/zombie.png
     - assets/images/tile.png
     - assets/tiles/map.tmx
     - assets/tiles/map.tsx

@@ -29,7 +29,7 @@ class Character extends SpriteAnimationComponent
   double objectCollitionId = -1;
   double objectCollitionTwoId = -1;
 
-  final double spriteSheetWidth = 128, spriteSheetHeight = 128;
+  double spriteSheetWidth = 128, spriteSheetHeight = 128;
 
   late SpriteAnimation idleAnimation,
       leftAnimation,
