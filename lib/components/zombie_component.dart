@@ -4,6 +4,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:worldxy04/components/character.dart';
 import 'package:worldxy04/components/enemy_character.dart';
+import 'package:worldxy04/helpers/enemy/movements.dart';
 import 'package:worldxy04/maps/tile/object_component.dart';
 import 'package:worldxy04/maps/tile/water_component.dart';
 
@@ -15,7 +16,11 @@ class ZombieComponent extends EnemyCharacter {
   Vector2 mapSize;
   double elapsedTime = 0;
 
-  ZombieComponent({required this.mapSize}) : super() {
+  ZombieComponent(
+      {required this.mapSize,
+      required movementTypes,
+      required typeEnemyMovement})
+      : super(typeEnemyMovement, movementTypes) {
     debugMode = true;
   }
 
@@ -45,8 +50,12 @@ class ZombieComponent extends EnemyCharacter {
     reset();
 
     body = RectangleHitbox(
-      size: Vector2(spriteSheetWidth, spriteSheetHeight - 40),
-    )..collisionType = CollisionType.active;
+        size: Vector2(
+          spriteSheetWidth,
+          spriteSheetHeight - 30,
+        ),
+        position: Vector2(0, 30))
+      ..collisionType = CollisionType.active;
     add(body);
     return super.onLoad();
   }
@@ -98,10 +107,10 @@ class ZombieComponent extends EnemyCharacter {
   @override
   void onCollision(Set<Vector2> points, PositionComponent other) {
     if (other is WaterComponent || other is ObjectComponent) {
-      if (playerCollisionDirection == null) {
-        // ??=
-        playerCollisionDirection = playerDirection;
-      }
+      // if (playerCollisionDirection == null) {
+      //   // ??=
+      playerCollisionDirection ??= playerDirection;
+      // }
     }
 
     super.onCollision(points, other);

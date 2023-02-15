@@ -5,6 +5,7 @@ import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:worldxy04/components/player_component.dart';
 import 'package:worldxy04/components/zombie_component.dart';
+import 'package:worldxy04/helpers/enemy/movements.dart';
 import 'package:worldxy04/maps/tile_map_component.dart';
 
 class MyGame extends FlameGame
@@ -26,7 +27,13 @@ class MyGame extends FlameGame
         camera.followComponent(player,
             worldBounds: Rect.fromLTRB(
                 0, 0, background.tiledMap.size.x, background.tiledMap.size.y));
-        add(ZombieComponent(mapSize: background.tiledMap.size));
+
+        // map 1
+        enemiesMap1.forEach((e) => add(ZombieComponent(
+            mapSize: background.tiledMap.size,
+            typeEnemyMovement: e.typeEnemyMovement,
+            movementTypes: e.movementEnemies)
+          ..position = Vector2.all(50)));
       },
     );
 
